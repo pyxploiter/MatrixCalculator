@@ -50,38 +50,18 @@ public class TestMatrixCalc {
 	}
 
 	@Test
-	public void testChangeSign() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDeterminant() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCreateSubMatrix() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCofactor() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testInverse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testValidateMultiplication() {
-		fail("Not yet implemented");
+		double[][] mat1 = {{2,2},{2,2}};
+		double[][] mat2 = {{2,2,3},{2,2}};
+		boolean result = testCalc.validateMultiplication(mat1, mat2);
+		assertTrue(result);
 	}
 
 	@Test
 	public void testValidateAddSubtract() {
-		
+		double[][] mat1 = {{2,2},{2,2}};
+		double[][] mat2 = {{2,2,3},{2,2}};
+		boolean result = testCalc.validateAddSubtract(mat1, mat2);
+		assertFalse(result);
 	}
-
 }
