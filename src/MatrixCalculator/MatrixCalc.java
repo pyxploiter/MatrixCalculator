@@ -15,7 +15,7 @@ public class MatrixCalc {
 		String[] operands = new String[3];
 		
 		Scanner in = new Scanner(System.in);
-		double[][] tempMatrix;
+		
 		System.out.println("Guide to write quations:- ");
 		System.out.println();
 		System.out.println("Subtraction of Matrix A & B =>  A-B");
@@ -46,50 +46,104 @@ public class MatrixCalc {
 			}
 			else {
 				operands[operandCount] = tokenizedEquation.get(i); 
+				operandCount++;
 			}
 			//System.out.println(tokenizedEquation.get(i));
 		}
 		Matrix matrix1 = createMatrix(matrixName[0]);
 		Matrix matrix2 = new Matrix();
 		
-		if (nameCount>1) {
-			
-		} 
-		
+		double[][] tempMatrix;
 		if (nameCount == 1) {
-			if (operands[0].equals("'")) {
+			if (operands[0].equals("'")) {		//A'
 				tempMatrix = transposeMatrix(matrix1.getElements());
+				print(tempMatrix);
 			}
-			else if(operands[0].equals("^")) {
+			else if(operands[0].equals("^")) {		//A^
 				tempMatrix = inverse(matrix1).getElements();
+				print(tempMatrix);
 			}
-			else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {
+			else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {	//A*k
 				tempMatrix = scalarMultiplication(matrix1.getElements(), scalar[0]);
+				print(tempMatrix);
 			}
 		}
 		else if (nameCount > 1){
 			matrix2 = createMatrix(matrixName[1]);
-			if (operandCount < 1) {
-				if (operands[0].equals("+")) {
+			if (operandCount == 1) {
+				if (operands[0].equals("+")) {		//A+B
 					tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
+					print(tempMatrix);
 				}
-				else if (operands[0].equals("-")) {
+				else if (operands[0].equals("-")) {		//A-B
 					tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
+					print(tempMatrix);
 				}
-				else if (operands[0].equals("*")) {
+				else if (operands[0].equals("*")) {		//A*B
 					tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
+					print(tempMatrix);
+				}
+			}
+			if (operandCount > 1) {
+				if (operands[0].equals("'")) {		
+					tempMatrix = transposeMatrix(matrix1.getElements());
+					if (operands[1].equals("+")) {		//A'+B
+						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("-")) {		//A'-B
+						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("*")) {		//A'*B
+						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+				}
+				else if(operands[0].equals("^")) {		
+					tempMatrix = inverse(matrix1).getElements();
+					if (operands[1].equals("+")) {		//A^+B
+						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("-")) {		//A^-B
+						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("*")) {		//A^*B
+						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+				}
+				else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {
+					tempMatrix = scalarMultiplication(matrix1.getElements(), scalar[0]);
+					if (operands[1].equals("+")) {		//A*k+B
+						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("-")) {		//A*k-B
+						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
+					else if (operands[1].equals("*")) {		//A*k*B
+						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
+						print(tempMatrix);
+					}
 				}
 			}
 		}
 		
-		for (int i =0; i<tempMatrix.length; i++) {
-			for (int j=0; j<tempMatrix[0].length; j++) {
-				System.out.print(tempMatrix[i][j]+" ");
+		
+	}
+	
+	public static void print(double[][] mat) {
+		for (int i =0; i<mat.length; i++) {
+			for (int j=0; j<mat[0].length; j++) {
+				System.out.print(mat[i][j]+" ");
 			}
 			System.out.println();
 		}
 	}
-	
 	//function to create matrix with random elements
 	public static Matrix createMatrix(String name) {
 		Random rand = new Random();
@@ -101,12 +155,16 @@ public class MatrixCalc {
 		column = in.nextInt();
 		double[][] matElements = new double[row][column];
 		
+		System.out.println("Matrix "+name+": ");
 		//randomly populate elements of matrix
 		for (int i=0; i<row; i++) {
 			for (int j=0; j<column; j++) {
 				matElements[i][j] = rand.nextInt(100); 
+				System.out.print(matElements[i][j]+" ");
 			}
+			System.out.println();
 		}
+		System.out.println("-------------------");
 		
 		Matrix mat = new Matrix(matElements);
 		return mat;
@@ -207,10 +265,8 @@ public class MatrixCalc {
 	               }
 	 
 	               result[c][d] = sum;
-	               System.out.print(sum+" ");
 	               sum = 0;
 	            }
-	            System.out.println();
 			}
 		}else{
 			System.out.println("Invalid Input");
