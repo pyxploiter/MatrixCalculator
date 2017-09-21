@@ -5,11 +5,22 @@ import java.util.Random;
 
 public class MatrixCalc {
 	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
 		double[][] tempMatrix;
+		System.out.println("Guide to write quations:- ");
+		System.out.println();
+		System.out.println("Addition of Matrix A & B =>  A+B");
+		System.out.println("Multiplication of Matrix A & B =>  A*B");
+		System.out.println("Transpose of Matrix A =>  A'");
+		System.out.println("Inverse of Matrix A =>  A^");
+		System.out.println("You can write such equations =>  A^+B");
+		System.out.println("--------------------------------------");
+		System.out.println("Enter an matrix equation: ");
+		String equation = in.next();
 		
 		Matrix matrix1 = createMatrix("A");
 		Matrix matrix2 = createMatrix("B");
-		//tempMatrix = scalarMultiplication(matrix1.getElements(), 5);
+		tempMatrix = scalarMultiplication(matrix1.getElements(), 5);
 		//tempMatrix = transposeMatrix(matrix1.getElements());
 		//tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
 		//tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
