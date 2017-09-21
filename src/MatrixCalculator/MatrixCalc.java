@@ -11,7 +11,7 @@ public class MatrixCalc {
 	public static void main(String[] args) throws IOException {
 		String[] matrixName = new String[2];
 		int nameCount = 0, scalarCount=0, operandCount = 0;
-		double[] scalar = new double[3];
+		int[] scalar = new int[3];
 		String[] operands = new String[3];
 		
 		Scanner in = new Scanner(System.in);
@@ -20,7 +20,7 @@ public class MatrixCalc {
 		System.out.println();
 		System.out.println("Subtraction of Matrix A & B =>  A-B");
 		System.out.println("Multiplication of Matrix A & B =>  A*B");
-		System.out.println("Transpose of Matrix A =>  A'");
+		System.out.println("Transpose of Matrix A =>  A!");
 		System.out.println("Inverse of Matrix A =>  A^");
 		System.out.println("You can write such equations =>  A^+B");
 		System.out.println("--------------------------------------");
@@ -31,16 +31,14 @@ public class MatrixCalc {
 	
 		// Create a Pattern object
 	    Pattern words = Pattern.compile("\\w");
-	    Pattern digits = Pattern.compile("\\d");
+	    Pattern digits = Pattern.compile("[0-9]+");
 	      
 		for (int i=0; i<tokenizedEquation.size(); i++) {
-			Matcher w = words.matcher(tokenizedEquation.get(i));
-			Matcher d = digits.matcher(tokenizedEquation.get(i));
-			if (w.find()) {
+			if (words.matcher(tokenizedEquation.get(i)).find()) {
 				matrixName[nameCount] = tokenizedEquation.get(i);
 				nameCount++;
 			}
-			else if(d.find()){
+			else if(digits.matcher(tokenizedEquation.get(i)).find()){
 				scalar[scalarCount] = Integer.parseInt(tokenizedEquation.get(i));
 				scalarCount++;
 			}
@@ -50,12 +48,16 @@ public class MatrixCalc {
 			}
 			//System.out.println(tokenizedEquation.get(i));
 		}
+		
+		//System.out.println(nameCount);
+		//System.out.println(operandCount);
+		
 		Matrix matrix1 = createMatrix(matrixName[0]);
 		Matrix matrix2 = new Matrix();
 		
 		double[][] tempMatrix;
 		if (nameCount == 1) {
-			if (operands[0].equals("'")) {		//A'
+			if (operands[0].equals("!")) {		//A'
 				tempMatrix = transposeMatrix(matrix1.getElements());
 				print(tempMatrix);
 			}
@@ -85,7 +87,7 @@ public class MatrixCalc {
 				}
 			}
 			if (operandCount > 1) {
-				if (operands[0].equals("'")) {		
+				if (operands[0].equals("!")) {		
 					tempMatrix = transposeMatrix(matrix1.getElements());
 					if (operands[1].equals("+")) {		//A'+B
 						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
