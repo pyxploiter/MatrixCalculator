@@ -51,8 +51,8 @@ public class TestMatrixCalc {
 
 	@Test
 	public void testValidateMultiplication() {
-		double[][] mat1 = {{2,2},{2,2}};
-		double[][] mat2 = {{2,2,3},{2,2}};
+		double[][] mat1 = {{2,2},{1,2}};
+		double[][] mat2 = {{2,3},{2,5}};
 		boolean result = testCalc.validateMultiplication(mat1, mat2);
 		assertTrue(result);
 	}
