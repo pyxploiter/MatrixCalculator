@@ -8,12 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class MatrixCalc {
-	public static void main(String[] args) throws IOException {
-		String[] matrixName = new String[2];
-		int nameCount = 0, scalarCount=0, operandCount = 0;
-		int[] scalar = new int[3];
-		String[] operands = new String[3];
-		
+	public static void main(String[] args)throws IOException  {
 		Scanner in = new Scanner(System.in);
 		
 		System.out.println("Guide to write quations:- ");
@@ -27,12 +22,22 @@ public class MatrixCalc {
 		System.out.println("Enter an matrix equation: ");
 		String equation = in.next();
 		
-		List<String> tokenizedEquation = tokenize(equation);
+		solveEquation(equation);
+		
+	}
 	
+	public static Matrix solveEquation(String equation) throws IOException {
+	
+		String[] matrixName = new String[2];
+		int nameCount = 0, scalarCount=0, operandCount = 0;
+		int[] scalar = new int[3];
+		String[] operands = new String[3];
+		
+		List<String> tokenizedEquation = tokenize(equation);
 		// Create a Pattern object
 	    Pattern words = Pattern.compile("\\w");
 	    Pattern digits = Pattern.compile("[0-9]+");
-	      
+
 		for (int i=0; i<tokenizedEquation.size(); i++) {
 			if (words.matcher(tokenizedEquation.get(i)).find()) {
 				matrixName[nameCount] = tokenizedEquation.get(i);
@@ -54,20 +59,23 @@ public class MatrixCalc {
 		
 		Matrix matrix1 = createMatrix(matrixName[0]);
 		Matrix matrix2 = new Matrix();
-		
+		Matrix result = new Matrix();
 		double[][] tempMatrix;
 		if (nameCount == 1) {
 			if (operands[0].equals("!")) {		//A'
 				tempMatrix = transposeMatrix(matrix1.getElements());
 				print(tempMatrix);
+				result.setMatrix(tempMatrix);
 			}
 			else if(operands[0].equals("^")) {		//A^
 				tempMatrix = inverse(matrix1).getElements();
 				print(tempMatrix);
+				result.setMatrix(tempMatrix);
 			}
 			else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {	//A*k
 				tempMatrix = scalarMultiplication(matrix1.getElements(), scalar[0]);
 				print(tempMatrix);
+				result.setMatrix(tempMatrix);
 			}
 		}
 		else if (nameCount > 1){
@@ -76,14 +84,17 @@ public class MatrixCalc {
 				if (operands[0].equals("+")) {		//A+B
 					tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
 					print(tempMatrix);
+					result.setMatrix(tempMatrix);
 				}
 				else if (operands[0].equals("-")) {		//A-B
 					tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
 					print(tempMatrix);
+					result.setMatrix(tempMatrix);
 				}
 				else if (operands[0].equals("*")) {		//A*B
 					tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
 					print(tempMatrix);
+					result.setMatrix(tempMatrix);
 				}
 			}
 			if (operandCount > 1) {
@@ -92,14 +103,17 @@ public class MatrixCalc {
 					if (operands[1].equals("+")) {		//A'+B
 						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("-")) {		//A'-B
 						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("*")) {		//A'*B
 						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 				}
 				else if(operands[0].equals("^")) {		
@@ -107,14 +121,17 @@ public class MatrixCalc {
 					if (operands[1].equals("+")) {		//A^+B
 						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("-")) {		//A^-B
 						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("*")) {		//A^*B
 						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 				}
 				else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {
@@ -122,22 +139,24 @@ public class MatrixCalc {
 					if (operands[1].equals("+")) {		//A*k+B
 						tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("-")) {		//A*k-B
 						tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 					else if (operands[1].equals("*")) {		//A*k*B
 						tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
 						print(tempMatrix);
+						result.setMatrix(tempMatrix);
 					}
 				}
 			}
 		}
 		
-		
+		return result;
 	}
-	
 	public static void print(double[][] mat) {
 		for (int i =0; i<mat.length; i++) {
 			for (int j=0; j<mat[0].length; j++) {
