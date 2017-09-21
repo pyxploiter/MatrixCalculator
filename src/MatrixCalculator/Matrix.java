@@ -6,6 +6,9 @@ public class Matrix {
     private int ncols;
     private double[][] element;
 
+    public Matrix() {
+    	
+    }
     public Matrix(double[][] data, String name) {
         this.element = data;
         this.nrows = data.length;

@@ -1,15 +1,24 @@
 package MatrixCalculator;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 public class MatrixCalc {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		String[] matrixName = new String[2];
+		int nameCount = 0, scalarCount=0, operandCount = 0;
+		double[] scalar = new double[3];
+		String[] operands = new String[3];
+		
 		Scanner in = new Scanner(System.in);
 		double[][] tempMatrix;
 		System.out.println("Guide to write quations:- ");
 		System.out.println();
-		System.out.println("Addition of Matrix A & B =>  A+B");
+		System.out.println("Subtraction of Matrix A & B =>  A-B");
 		System.out.println("Multiplication of Matrix A & B =>  A*B");
 		System.out.println("Transpose of Matrix A =>  A'");
 		System.out.println("Inverse of Matrix A =>  A^");
@@ -18,14 +27,61 @@ public class MatrixCalc {
 		System.out.println("Enter an matrix equation: ");
 		String equation = in.next();
 		
-		Matrix matrix1 = createMatrix("A");
-		Matrix matrix2 = createMatrix("B");
-		tempMatrix = scalarMultiplication(matrix1.getElements(), 5);
-		//tempMatrix = transposeMatrix(matrix1.getElements());
-		//tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
-		//tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
-		//tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
-		//tempMatrix = inverse(matrix1).getElements();
+		List<String> tokenizedEquation = tokenize(equation);
+	
+		// Create a Pattern object
+	    Pattern words = Pattern.compile("\\w");
+	    Pattern digits = Pattern.compile("\\d");
+	      
+		for (int i=0; i<tokenizedEquation.size(); i++) {
+			Matcher w = words.matcher(tokenizedEquation.get(i));
+			Matcher d = digits.matcher(tokenizedEquation.get(i));
+			if (w.find()) {
+				matrixName[nameCount] = tokenizedEquation.get(i);
+				nameCount++;
+			}
+			else if(d.find()){
+				scalar[scalarCount] = Integer.parseInt(tokenizedEquation.get(i));
+				scalarCount++;
+			}
+			else {
+				operands[operandCount] = tokenizedEquation.get(i); 
+			}
+			//System.out.println(tokenizedEquation.get(i));
+		}
+		Matrix matrix1 = createMatrix(matrixName[0]);
+		Matrix matrix2 = new Matrix();
+		
+		if (nameCount>1) {
+			
+		} 
+		
+		if (nameCount == 1) {
+			if (operands[0].equals("'")) {
+				tempMatrix = transposeMatrix(matrix1.getElements());
+			}
+			else if(operands[0].equals("^")) {
+				tempMatrix = inverse(matrix1).getElements();
+			}
+			else if((scalar[0] >= 0 && scalar[0] <= 9) && operands[0].equals("*")) {
+				tempMatrix = scalarMultiplication(matrix1.getElements(), scalar[0]);
+			}
+		}
+		else if (nameCount > 1){
+			matrix2 = createMatrix(matrixName[1]);
+			if (operandCount < 1) {
+				if (operands[0].equals("+")) {
+					tempMatrix = addMatrices(matrix1.getElements(), matrix2.getElements());
+				}
+				else if (operands[0].equals("-")) {
+					tempMatrix = subtractMatrices(matrix1.getElements(), matrix2.getElements());
+				}
+				else if (operands[0].equals("*")) {
+					tempMatrix = multiplyMatrices(matrix1.getElements(), matrix2.getElements());
+				}
+			}
+		}
+		
 		for (int i =0; i<tempMatrix.length; i++) {
 			for (int j=0; j<tempMatrix[0].length; j++) {
 				System.out.print(tempMatrix[i][j]+" ");
@@ -55,6 +111,26 @@ public class MatrixCalc {
 		Matrix mat = new Matrix(matElements);
 		return mat;
 	}
+	
+	//tokenizing string
+	public static List<String> tokenize(String s) throws IOException {
+        StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(s));
+        tokenizer.ordinaryChar('-');  // Don't parse minus as part of numbers.
+        List<String> tokBuf = new ArrayList<String>();
+        while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
+            switch(tokenizer.ttype) {
+                case StreamTokenizer.TT_NUMBER:
+                    tokBuf.add(String.valueOf(tokenizer.nval));
+                    break;
+                case StreamTokenizer.TT_WORD:
+                    tokBuf.add(tokenizer.sval);
+                    break;
+                default:  // operator
+                    tokBuf.add(String.valueOf((char) tokenizer.ttype));
+            }
+        }
+        return tokBuf; 
+    }
 	
 	//calculating addition of matrices
 	public static double[][] addMatrices(double[][] matrix1, double[][] matrix2){
